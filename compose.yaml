@@ -1,0 +1,33 @@
+﻿services:
+  rabbitmqkata:
+    image: rabbitmqkata
+    build:
+      context: .
+      dockerfile: RabbitMQKata/Dockerfile
+  rabbitmq:
+    image: rabbitmq:latest
+    container_name: rabbitmq
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      - RABBITMQ_DEFAULT_USER=${RABBITMQ_USER}
+      - RABBITMQ_DEFAULT_PASS=${RABBITMQ_PASSWORD}
+    configs:
+      - source: rabbitmq-plugins
+        target: /etc/rabbitmq/enabled_plugins
+    volumes:
+      - ./data/rabbitmq-lib:/var/lib/rabbitmq/
+      - ./data/rabbitmq-log:/var/log/rabbitmq
+    
+configs:
+  rabbitmq-plugins:
+    content: "[rabbitmq_management]."
+
+volumes:
+  rabbitmq-lib:
+    driver: local
+  rabbitmq-log:
+    driver: local
+`
