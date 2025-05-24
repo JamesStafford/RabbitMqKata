@@ -2,9 +2,9 @@ using EasyNetQ;
 
 namespace RabbitMQKata.Publisher;
 
-public class MessagePublisher
+public static class MessagePublisher
 {
-    public async Task foo()
+    public static async Task WriteTestMessages()
     {
         // Connection string:
         // For local RabbitMQ (not in Docker compose yet): "host=localhost;username=guest;password=guest"
