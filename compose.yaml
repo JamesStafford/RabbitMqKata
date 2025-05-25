@@ -4,6 +4,8 @@
     build:
       context: .
       dockerfile: RabbitMQKata/Dockerfile
+    env_file:
+      - .env
   rabbitmq:
     image: rabbitmq:latest
     container_name: rabbitmq

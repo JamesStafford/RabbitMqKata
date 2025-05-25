@@ -1,9 +1,4 @@
-﻿using DotNetEnv;
-using RabbitMQKata.Publisher;
-
-Console.WriteLine("Hello World!");
-
-Env.Load();
+﻿using RabbitMQKata.Publisher;
 
 string? rabbitUser = Environment.GetEnvironmentVariable("RABBITMQ_USER");
 Console.WriteLine($"rabbitUser: \"{rabbitUser}\"");
@@ -26,4 +21,4 @@ if (string.IsNullOrWhiteSpace(rabbitPassword))
     throw new ApplicationException("Missing environment variables RABBITMQ_PASSWORD.");
 }
 
-MessagePublisher.WriteTestMessages().Wait();
+// MessagePublisher.WriteTestMessages().Wait();
