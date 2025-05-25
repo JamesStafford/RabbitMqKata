@@ -24,7 +24,6 @@ public static class MessagePublisher
 
             Console.WriteLine("Connected to RabbitMQ!");
 
-
             for (int messageId = 1; messageId <= 10; messageId++)
             {
                 var message = new TextMessage(messageId, $"Product \"{messageId}\"");

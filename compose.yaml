@@ -1,11 +1,4 @@
 ﻿services:
-  rabbitmqkata:
-    image: rabbitmqkata
-    build:
-      context: .
-      dockerfile: RabbitMQKata/Dockerfile
-    env_file:
-      - .env
   rabbitmq:
     image: rabbitmq:latest
     container_name: rabbitmq
@@ -22,7 +15,22 @@
     volumes:
       - ./data/rabbitmq-lib:/var/lib/rabbitmq/
       - ./data/rabbitmq-log:/var/log/rabbitmq
-    
+    healthcheck: # Optional: waits for RabbitMQ to be healthy
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 5s
+      timeout: 10s
+      retries: 5
+  rabbitmqkata:
+    image: rabbitmqkata
+    build:
+      context: .
+      dockerfile: RabbitMQKata/Dockerfile
+    env_file:
+      - .env
+    depends_on:
+      rabbitmq-servicename: # Ensures RabbitMQ is started before publisher
+        condition: service_healthy # Waits for healthcheck to pass
+        
 configs:
   rabbitmq-plugins:
     content: "[rabbitmq_management]."
