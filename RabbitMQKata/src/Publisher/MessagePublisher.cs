@@ -16,7 +16,6 @@ public static class MessagePublisher
         {
             var connectionConfiguration = new ConnectionConfiguration
             {
-                Timeout = TimeSpan.FromSeconds(10),
                 PublisherConfirms = true // Enable publisher confirms for reliability
             };
 
@@ -73,7 +72,7 @@ public static class MessagePublisher
             Console.ResetColor();
         }
 
-        Task.Delay(5*60*1_000);
+        await Task.Delay(5*60*1_000);
         Console.WriteLine("Publisher shut down.");
     }
 }
