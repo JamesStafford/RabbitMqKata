@@ -28,7 +28,7 @@
     env_file:
       - .env
     depends_on:
-      rabbitmq-servicename: # Ensures RabbitMQ is started before publisher
+      rabbitmq: # Ensures RabbitMQ is started before publisher
         condition: service_healthy # Waits for healthcheck to pass
         
 configs:

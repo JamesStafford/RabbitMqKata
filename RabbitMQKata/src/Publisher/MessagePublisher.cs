@@ -7,7 +7,7 @@ public static class MessagePublisher
 {
     public static async Task WriteTestMessages(string username, string password)
     {
-        var connectionString = $"host=localhost;username={username};password={password}";
+        var connectionString = $"host=rabbitmq;username={username};password={password}";
         
         Console.WriteLine("Attempting to connect to RabbitMQ...");
         Console.WriteLine($"Connection string: {connectionString}");
