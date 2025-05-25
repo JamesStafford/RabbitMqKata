@@ -1,4 +1,5 @@
 using EasyNetQ;
+using EasyNetQ.DI;
 
 namespace RabbitMQKata.Publisher;
 
@@ -22,24 +23,42 @@ public static class MessagePublisher
 
         try
         {
-            // The IBus is the main entry point to EasyNetQ. It is IDisposable.
-            using (var bus = RabbitHutch.CreateBus(connectionString))
+            // Create connection with timeout settings
+            var connectionConfiguration = new ConnectionConfiguration
             {
-                Console.WriteLine("Connected to RabbitMQ!");
+                Timeout = TimeSpan.FromSeconds(10), // Connection timeout
+                PublisherConfirms = true // Enable publisher confirms for reliability
+            };
 
-                for (int messageId = 1; messageId <= 10; messageId++)
+            using var bus = RabbitHutch.CreateBus(connectionString, x => x.Register(_ => connectionConfiguration));
+
+            Console.WriteLine("Connected to RabbitMQ!");
+
+
+            for (int messageId = 1; messageId <= 10; messageId++)
+            {
+                var message = new TextMessage(messageId, $"Product \"{messageId}\"");
+                
+                // Add timeout for publish operation
+                using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                try
                 {
-                    var message = new TextMessage(messageId, $"Product \"{messageId}\"");
-                    
                     // Publish the message
                     // EasyNetQ will create an exchange based on the message type if it doesn't exist.
                     // Exchange name convention: Namespace.ClassName:Version (e.g., MyMessages.TextMessage:1)
-                    await bus.PubSub.PublishAsync(message);
-
+                    await bus.PubSub.PublishAsync(message, cts.Token);
                     Console.WriteLine($"Sent: {message}");
                 }
-            } // bus is disposed of here, closing the connection.
-        }
+                catch (OperationCanceledException)
+                {
+                    Console.WriteLine($"Publishing message {messageId} timed out after 5 seconds");
+                    throw;
+                }
+
+
+                Console.WriteLine($"Sent: {message}");
+            }
+        } // bus is disposed of here, closing the connection.
         catch (EasyNetQ.EasyNetQException ex)
         {
             Console.ForegroundColor = ConsoleColor.Red;
@@ -53,14 +72,20 @@ public static class MessagePublisher
             Console.WriteLine("Is RabbitMQ running and accessible on localhost:5672?");
             Console.WriteLine("If C# app is in Docker, ensure network config allows access to RabbitMQ.");
         }
+        catch (OperationCanceledException)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            Console.WriteLine("Operation timed out while trying to publish message");
+            Console.ResetColor();
+        }
         catch (Exception ex)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             Console.ResetColor();
         }
-        
-        Thread.Sleep(10_000);
+
+        Task.Delay(5*60*1_000);
         Console.WriteLine("Publisher shut down.");
     }
 }
