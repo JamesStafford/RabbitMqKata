@@ -28,7 +28,7 @@ Task<bool> isRabbitHostAvailableTask = NetworkUtils.IsHostAvailable(rabbitHost);
 isRabbitHostAvailableTask.Wait();
 bool isRabbitHostAvailable = isRabbitHostAvailableTask.Result;
 
-Console.WriteLine($"isRabbitHostAvailable: \"{isRabbitHostAvailableTask}\"");
+Console.WriteLine($"isRabbitHostAvailable: \"{isRabbitHostAvailable}\"");
 
 if (isRabbitHostAvailable)
 {
@@ -44,4 +44,4 @@ if (isRabbitHostAvailable)
 }
 
 
-// MessagePublisher.WriteTestMessages(rabbitUser, rabbitPassword).Wait();
+MessagePublisher.WriteTestMessages(rabbitUser, rabbitPassword).Wait();
