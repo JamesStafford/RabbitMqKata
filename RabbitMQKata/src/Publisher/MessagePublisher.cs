@@ -4,13 +4,13 @@ namespace RabbitMQKata.Publisher;
 
 public static class MessagePublisher
 {
-    public static async Task WriteTestMessages()
+    public static async Task WriteTestMessages(string username, string password)
     {
         // Connection string:
         // For local RabbitMQ (not in Docker compose yet): "host=localhost;username=guest;password=guest"
         // When using Docker Compose later, it will be: "host=rabbitmq-easynetq;username=guest;password=guest"
         // where 'rabbitmq-easynetq' is the service name of RabbitMQ in docker-compose.yml
-        var connectionString = "host=localhost;username=_;password=_";
+        var connectionString = $"host=localhost;username={username};password={password}";
 
         // For now, let's assume the C# app is NOT in Docker and RabbitMQ IS.
         // If your C# app IS in Docker, and RabbitMQ is ALSO in Docker (but not via compose yet),
@@ -59,8 +59,8 @@ public static class MessagePublisher
             Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             Console.ResetColor();
         }
-
-        Console.WriteLine("Publisher shut down.");
+        
         Thread.Sleep(10_000);
+        Console.WriteLine("Publisher shut down.");
     }
 }

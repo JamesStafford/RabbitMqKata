@@ -21,4 +21,4 @@ if (string.IsNullOrWhiteSpace(rabbitPassword))
     throw new ApplicationException("Missing environment variables RABBITMQ_PASSWORD.");
 }
 
-// MessagePublisher.WriteTestMessages().Wait();
+MessagePublisher.WriteTestMessages(rabbitUser, rabbitPassword).Wait();
