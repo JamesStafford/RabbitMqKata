@@ -7,6 +7,7 @@ public static class MessagePublisher
 {
     public static async Task WriteTestMessages(string username, string password)
     {
+        // var connectionString = $"host=rabbit;username={username};password={password}";
         var connectionString = $"host=rabbitmq;username={username};password={password}";
         
         Console.WriteLine("Attempting to connect to RabbitMQ...");
@@ -71,8 +72,7 @@ public static class MessagePublisher
             Console.WriteLine($"An unexpected error occurred: {ex.Message}");
             Console.ResetColor();
         }
-
-        await Task.Delay(5*60*1_000);
+        
         Console.WriteLine("Publisher shut down.");
     }
 }
