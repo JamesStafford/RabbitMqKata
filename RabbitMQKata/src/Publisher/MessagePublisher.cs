@@ -26,7 +26,8 @@ public static class MessagePublisher
 
             for (int messageId = 1; messageId <= 10; messageId++)
             {
-                var message = new TextMessage(messageId, $"Product \"{messageId}\"");
+                var text = $"Product \"{messageId}\"";
+                var message = new TextMessage(messageId, text);
                 
                 using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
                 try
@@ -34,17 +35,18 @@ public static class MessagePublisher
                     // Publish the message
                     // EasyNetQ will create an exchange based on the message type if it doesn't exist.
                     // Exchange name convention: Namespace.ClassName:Version (e.g., MyMessages.TextMessage:1)
-                    await bus.PubSub.PublishAsync(message, cts.Token);
-                    Console.WriteLine($"Sent: {message}");
+                    Console.WriteLine($"Sending: \"{text}\"");
+                    await bus.PubSub.PublishAsync(text, cts.Token);
+                    Console.WriteLine($"Sent: \"{text}\"");
                 }
                 catch (OperationCanceledException)
                 {
-                    Console.WriteLine($"Publishing message {messageId} timed out or was cancelled");
+                    Console.WriteLine($"Publishing message \"{messageId}\" timed out or was cancelled");
                     throw;
                 }
 
 
-                Console.WriteLine($"Sent: {message}");
+                Console.WriteLine($"Sent: \"{message}\"");
             }
         }
         catch (EasyNetQ.EasyNetQException ex)
