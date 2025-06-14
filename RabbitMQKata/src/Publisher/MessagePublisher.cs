@@ -14,17 +14,17 @@ public static class MessagePublisher
 
         while (true)
         {
+            var connectionConfiguration = new ConnectionConfiguration
+            {
+                PublisherConfirms = true // Enable publisher confirms for reliability
+            };
+
+            using var bus = RabbitHutch.CreateBus(connectionString, x => x.Register(_ => connectionConfiguration));
+
+            Console.WriteLine("Connected to RabbitMQ!");
+
             try
             {
-                var connectionConfiguration = new ConnectionConfiguration
-                {
-                    PublisherConfirms = true // Enable publisher confirms for reliability
-                };
-
-                using var bus = RabbitHutch.CreateBus(connectionString, x => x.Register(_ => connectionConfiguration));
-
-                Console.WriteLine("Connected to RabbitMQ!");
-
                 for (int messageId = 1; messageId <= 10; messageId++)
                 {
                     var text = $"Product \"{messageId}\"";

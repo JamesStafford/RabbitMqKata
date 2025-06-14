@@ -13,6 +13,7 @@ public static class MessageSubscriber
 
         await bus.PubSub.SubscribeAsync<TextMessage>(
             subscriptionId: "my_subscription", // unique subscription ID
+            
             message =>
             {
                 Console.WriteLine($"Received message: {message.Content}");
