@@ -6,7 +6,7 @@ string? rabbitUser = Environment.GetEnvironmentVariable("RABBITMQ_USER");
 Console.WriteLine($"rabbitUser: \"{rabbitUser}\"");
 
 string? rabbitPassword = Environment.GetEnvironmentVariable("RABBITMQ_PASSWORD");
-Console.WriteLine($"rabbitPassword: \"{rabbitUser}\"");
+Console.WriteLine($"rabbitPassword: \"{rabbitPassword}\"");
 
 if (string.IsNullOrWhiteSpace(rabbitUser) || string.IsNullOrWhiteSpace(rabbitPassword))
 {

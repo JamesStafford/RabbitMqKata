@@ -39,7 +39,6 @@ public static class MessagePublisher
                         Console.WriteLine($"Sending: \"{text}\"");
                         await bus.PubSub.PublishAsync(
                             message,
-                            "default_topic",
                             cancellationToken: cts.Token);
                         Console.WriteLine($"Sent: \"{text}\"");
                     }
