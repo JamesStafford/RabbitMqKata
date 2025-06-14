@@ -39,6 +39,7 @@ public static class MessagePublisher
                         Console.WriteLine($"Sending: \"{text}\"");
                         await bus.PubSub.PublishAsync(
                             message,
+                            "default_topic",
                             cancellationToken: cts.Token);
                         Console.WriteLine($"Sent: \"{text}\"");
                     }
@@ -78,7 +79,7 @@ public static class MessagePublisher
             }
 
             Console.WriteLine("Publisher shut down.");
-            
+
             await Task.Delay(TimeSpan.FromSeconds(5));
         }
     }
