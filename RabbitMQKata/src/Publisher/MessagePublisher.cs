@@ -7,8 +7,8 @@ public static class MessagePublisher
 {
     public static async Task WriteTestMessages(string username, string password)
     {
-        // var connectionString = $"host=rabbit;username={username};password={password}";
-        var connectionString = $"host=rabbitmq;username={username};password={password}";
+        var connectionString = $"host=rabbit;username={username};password={password}";
+        // var connectionString = $"host=rabbitmq;username={username};password={password}";
         
         Console.WriteLine("Attempting to connect to RabbitMQ...");
         Console.WriteLine($"Connection string: {connectionString}");
@@ -36,7 +36,7 @@ public static class MessagePublisher
                     // EasyNetQ will create an exchange based on the message type if it doesn't exist.
                     // Exchange name convention: Namespace.ClassName:Version (e.g., MyMessages.TextMessage:1)
                     Console.WriteLine($"Sending: \"{text}\"");
-                    await bus.PubSub.PublishAsync(text, cts.Token);
+                    await bus.PubSub.PublishAsync(message, cts.Token);
                     Console.WriteLine($"Sent: \"{text}\"");
                 }
                 catch (OperationCanceledException)
