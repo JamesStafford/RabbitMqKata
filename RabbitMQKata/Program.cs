@@ -1,4 +1,5 @@
 ﻿using RabbitMQKata.Publisher;
+using RabbitMQKata.Subscriber;
 using RabbitMQKata.Utils;
 
 string? rabbitUser = Environment.GetEnvironmentVariable("RABBITMQ_USER");
@@ -43,5 +44,30 @@ if (isRabbitHostAvailable)
     Console.WriteLine($"isPort15672Available: \"{isPort15672Available}\"");
 }
 
+// Create a cancellation token source for coordinated shutdown
+using var cts = new CancellationTokenSource();
 
-MessagePublisher.WriteTestMessages(rabbitUser, rabbitPassword).Wait();
+try
+{
+    // Start subscriber task
+    var subscriberTask = Task.Run(() => MessageSubscriber.SubscribeToMessages(rabbitUser, rabbitPassword), cts.Token);
+
+    // Give the subscriber a moment to set up
+    await Task.Delay(2000, cts.Token); // Wait 2 seconds
+
+    // Start publisher task
+    var publisherTask = Task.Run(() => MessagePublisher.WriteTestMessages(rabbitUser, rabbitPassword), cts.Token);
+
+    // Wait for both tasks to complete or until cancellation is requested
+    await Task.WhenAll(publisherTask, subscriberTask);
+}
+catch (Exception ex)
+{
+    Console.WriteLine($"An error occurred: {ex.Message}");
+}
+finally
+{
+    cts.Cancel(); // Ensure we cancel any remaining operations
+}
+
+await Task.Delay(60*1000, cts.Token);

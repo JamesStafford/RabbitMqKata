@@ -21,9 +21,9 @@ public static class MessagePublisher
             };
 
             using var bus = RabbitHutch.CreateBus(connectionString, x => x.Register(_ => connectionConfiguration));
-
+            
             Console.WriteLine("Connected to RabbitMQ!");
-
+            
             for (int messageId = 1; messageId <= 10; messageId++)
             {
                 var text = $"Product \"{messageId}\"";
