@@ -22,7 +22,7 @@ if (string.IsNullOrWhiteSpace(rabbitPassword))
     throw new ApplicationException("Missing environment variables RABBITMQ_PASSWORD.");
 }
 
-string rabbitHost = "rabbitmq";
+string rabbitHost = "rabbit";
 
 Task<bool> isRabbitHostAvailableTask = NetworkUtils.IsHostAvailable(rabbitHost);
 isRabbitHostAvailableTask.Wait();
