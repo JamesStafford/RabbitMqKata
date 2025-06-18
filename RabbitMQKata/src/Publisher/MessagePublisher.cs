@@ -8,20 +8,12 @@ public static class MessagePublisher
     public static async Task WriteTestMessages(string username, string password)
     {
         var connectionString = $"host=rabbit;username={username};password={password}";
-
-        Console.WriteLine("Attempting to connect to RabbitMQ...");
+        
         Console.WriteLine($"Connection string: {connectionString}");
 
         while (true)
         {
-            var connectionConfiguration = new ConnectionConfiguration
-            {
-                PublisherConfirms = true // Enable publisher confirms for reliability
-            };
-
-            using var bus = RabbitHutch.CreateBus(connectionString, x => x.Register(_ => connectionConfiguration));
-
-            Console.WriteLine("Connected to RabbitMQ!");
+            using var bus = RabbitHutch.CreateBus(connectionString);
 
             try
             {
@@ -30,12 +22,9 @@ public static class MessagePublisher
                     var text = $"Product \"{messageId}\"";
                     var message = new TextMessage(messageId, text);
 
-                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
+                    using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5*60));
                     try
                     {
-                        // Publish the message
-                        // EasyNetQ will create an exchange based on the message type if it doesn't exist.
-                        // Exchange name convention: Namespace.ClassName:Version (e.g., MyMessages.TextMessage:1)
                         Console.WriteLine($"Sending: \"{text}\"");
                         await bus.PubSub.PublishAsync(
                             message,
