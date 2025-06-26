@@ -15,7 +15,7 @@
     volumes:
       - ./data/rabbitmq-lib:/var/lib/rabbitmq/
       - ./data/rabbitmq-log:/var/log/rabbitmq
-    healthcheck: # Optional: waits for RabbitMQ to be healthy
+    healthcheck: 
       test: [ "CMD", "rabbitmqctl", "status" ]
       interval: 5s
       timeout: 10s
@@ -28,8 +28,8 @@
     env_file:
       - .env
     depends_on:
-      rabbitmq: # Ensures RabbitMQ is started before publisher
-        condition: service_healthy # Waits for healthcheck to pass
+      rabbitmq: 
+        condition: service_healthy 
         
 configs:
   rabbitmq-plugins:
